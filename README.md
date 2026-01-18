@@ -115,7 +115,7 @@ Siga os passos abaixo para executar o projeto em sua máquina local:
 1.  **Clone o repositório**:
 
     ```bash
-    git clone https://github.com/seu-usuario/projeto-sistema-saas.git
+    git clone https://github.com/AdrielLuniere/Projeto-Sistema-SaaS.git
     cd projeto-sistema-saas
     ```
 
