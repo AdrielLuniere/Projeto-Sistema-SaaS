@@ -97,6 +97,10 @@ Ao longo do caminho, alguns bugs críticos foram corrigidos:
     - _Problema_: Botões e textos hardcoded dificultavam a expansão.
     - _Solução_: Padronização dos textos e preparação para i18n futura.
 
+### 🐛 Bugs não Resolvidos.
+1. na aba de automação esta dando "404
+This page could not be found." no qual estou em processo para resolver.
+
 ## 🚀 Como Rodar o Projeto
 
 Siga os passos abaixo para executar o projeto em sua máquina local:
