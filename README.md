@@ -1,6 +1,6 @@
 # Sistema de Gestão de Boletos (SaaS)
 
-![Banner do Projeto](public/banner-placeholder.png)
+![Banner do Projeto](img/banner.png)
 
 > _Nota: Adicione uma imagem de capa aqui para ilustrar o projeto._
 
