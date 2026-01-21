@@ -46,10 +46,19 @@ export const ProfileForm = ({ user }: ProfileFormProps) => {
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (file) {
-            // For demo: create local object URL
-            const url = URL.createObjectURL(file)
-            setPreview(url)
-            form.setValue("image", url) // Saving the blob URL is temporary. In prod, upload first.
+            // Check file size (limit to 1MB for Base64 safety)
+            if (file.size > 1024 * 1024) {
+                alert("File is too large (Max 1MB)")
+                return
+            }
+
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                const base64String = reader.result as string
+                setPreview(base64String)
+                form.setValue("image", base64String)
+            }
+            reader.readAsDataURL(file)
         }
     }
 

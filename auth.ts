@@ -34,4 +34,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user, trigger, session }) {
+      if (user) {
+        token.id = user.id
+        token.image = user.image
+      }
+      
+      // Update token if session is continuously updated
+      if (trigger === "update" && session?.user?.image) {
+        token.image = session.user.image;
+      }
+      return token
+    },
+    async session({ session, token }) {
+      if (token?.id) {
+        session.user.id = token.id as string
+        session.user.image = token.image as string
+      }
+      return session
+    }
+  },
 })

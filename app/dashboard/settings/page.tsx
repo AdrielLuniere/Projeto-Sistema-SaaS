@@ -14,11 +14,14 @@ const SettingsPage = async () => {
     
     // Fetch User settings for Profile Tab
     const session = await auth()
+    
+    if (!session?.user?.id) return <div>Unauthorized</div>
+
     const user = await db.user.findUnique({
-        where: { id: session?.user?.id }
+        where: { id: session.user.id }
     })
 
-    if (!settings || !user) return <div>Unauthorized or not found</div>
+    if (!settings || !user) return <div>Tenant or User not found</div>
 
   return (
     <div className="flex-1 space-y-4">
