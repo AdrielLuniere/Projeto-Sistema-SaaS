@@ -69,3 +69,71 @@ export const getClients = async () => {
         orderBy: { createdAt: "desc" }
     })
 }
+
+export const getClient = async (id: string) => {
+    const session = await auth()
+    if (!session?.user?.id) return null
+
+    const user = await db.user.findUnique({
+        where: { id: session.user.id }
+    })
+    
+    if (!user?.tenantId) return null
+
+    return await db.client.findFirst({
+        where: { 
+            id,
+            tenantId: user.tenantId 
+        }
+    })
+}
+
+export const updateClient = async (id: string, values: z.infer<typeof ClientSchema>) => {
+    const session = await auth()
+    
+    if (!session?.user?.id) {
+        return { error: "Unauthorized" }
+    }
+  
+    // Get user to find Tenant ID (Security: ensure user owns the client)
+    const user = await db.user.findUnique({
+      where: { id: session.user.id }
+    })
+  
+    if (!user?.tenantId) return { error: "Tenant not found" }
+  
+    const validatedFields = ClientSchema.safeParse(values)
+  
+    if (!validatedFields.success) {
+      return { error: "Invalid fields!" }
+    }
+  
+    // Verify client belongs to tenant
+    const existingClient = await db.client.findUnique({
+        where: { id }
+    })
+
+    if (!existingClient || existingClient.tenantId !== user.tenantId) {
+        return { error: "Client not found or unauthorized" }
+    }
+  
+    const { name, document, email, phone, address } = validatedFields.data
+  
+    try {
+      await db.client.update({
+        where: { id },
+        data: {
+          name,
+          document,
+          email,
+          phone,
+          address,
+        }
+      })
+  
+      return { success: "Client updated!" }
+    } catch (error) {
+      console.error(error) 
+      return { error: "Failed to update client." }
+    }
+}

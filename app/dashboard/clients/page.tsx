@@ -59,7 +59,9 @@ const ClientsPage = async () => {
                             <TableCell>{client.document}</TableCell>
                             <TableCell>{client.email || "-"}</TableCell>
                             <TableCell className="text-right">
-                                <Button variant="ghost" size="sm">Edit</Button>
+                                <Button variant="ghost" size="sm" asChild>
+                                    <Link href={`/dashboard/clients/${client.id}`}>Edit</Link>
+                                </Button>
                             </TableCell>
                         </TableRow>
                     ))}

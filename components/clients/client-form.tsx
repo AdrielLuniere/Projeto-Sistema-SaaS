@@ -15,13 +15,22 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
-import { createClient } from "@/actions/client"
+import { createClient, updateClient } from "@/actions/client"
 import { useRouter } from "next/navigation"
-// import { toast } from "sonner" 
-// Removed unused import 
-// Actually, I haven't added sonner. I'll use simple error state text.
+// ... imports
 
-export const ClientForm = () => {
+interface ClientFormProps {
+    initialData?: {
+        id: string
+        name: string
+        document: string
+        email: string | null
+        phone: string | null
+        address: string | null
+    }
+}
+
+export const ClientForm = ({ initialData }: ClientFormProps) => {
   const [error, setError] = useState<string | undefined>("")
   const [success, setSuccess] = useState<string | undefined>("")
   const [isPending, startTransition] = useTransition()
@@ -30,11 +39,11 @@ export const ClientForm = () => {
   const form = useForm<z.infer<typeof ClientSchema>>({
     resolver: zodResolver(ClientSchema),
     defaultValues: {
-      name: "",
-      document: "",
-      email: "",
-      phone: "",
-      address: "",
+      name: initialData?.name || "",
+      document: initialData?.document || "",
+      email: initialData?.email || "",
+      phone: initialData?.phone || "",
+      address: initialData?.address || "",
     },
   })
 
@@ -43,7 +52,11 @@ export const ClientForm = () => {
     setSuccess("")
 
     startTransition(() => {
-      createClient(values)
+        const action = initialData 
+            ? updateClient(initialData.id, values)
+            : createClient(values)
+
+      action
         .then((data) => {
           if (data.error) {
             setError(data.error)
@@ -165,7 +178,7 @@ export const ClientForm = () => {
             type="submit"
             className="w-full md:w-auto"
           >
-            Create Client
+            {initialData ? "Save Changes" : "Create Client"}
           </Button>
         </form>
       </Form>
