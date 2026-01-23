@@ -66,7 +66,11 @@ const BoletosPage = async () => {
                                 </Badge>
                             </TableCell>
                             <TableCell className="text-right">
-                                <Button variant="ghost" size="sm">PDF</Button>
+                                <Button variant="ghost" size="sm" asChild>
+                                    <Link href={`/api/boletos/${boleto.id}/pdf`} target="_blank">
+                                        PDF
+                                    </Link>
+                                </Button>
                             </TableCell>
                         </TableRow>
                     ))}
