@@ -3,15 +3,12 @@ import { renderToStream } from "@react-pdf/renderer"
 import { BoletoTemplate } from "@/components/boletos/pdf-template"
 import { db } from "@/lib/db"
 import { auth } from "@/auth"
+import React from "react"
 
 export async function GET(
   req: NextRequest, 
   { params }: { params: { boletoId: string } }
 ) {
-    // Note: in NextJS 15+ "params" is a Promise, in 14 it is object.
-    // Assuming standard Next 14 behavior based on previous files, but we can await it if needed or treat as obj.
-    // If we face runtime issues, we will add await.
-    // For safety with types in route handlers:
     const boletoId = params.boletoId
 
     const session = await auth()
@@ -40,15 +37,10 @@ export async function GET(
          return new NextResponse("Forbidden", { status: 403 })
     }
 
-    // Generate PDF Stream
-    const stream = await renderToStream(<BoletoTemplate boleto={boleto} />)
+    // Generate PDF Stream using React.createElement explicitly to avoid JSX syntax in .ts file
+    const stream = await renderToStream(React.createElement(BoletoTemplate, { boleto: boleto }))
     
     // Create Response
-    // We need to convert the NodeJS ReadableStream to a Web ReadableStream or Buffer
-    // renderToStream returns a NodeJS.ReadableStream. 
-    // NextResponse expects a body that can be Blob, Buffer, or Web Stream.
-    
-    // Helper to convert stream to buffer
     const chunks: Uint8Array[] = []
     for await (const chunk of stream) {
         chunks.push(chunk as Uint8Array)
