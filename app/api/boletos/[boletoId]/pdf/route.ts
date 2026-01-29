@@ -37,6 +37,11 @@ export async function GET(
          return new NextResponse("Forbidden", { status: 403 })
     }
 
+    // If Boleto has an external PDF URL (PagBank/NuBank), redirect to it.
+    if (boleto.pdfUrl) {
+        return NextResponse.redirect(boleto.pdfUrl)
+    }
+
     // Generate PDF Stream using React.createElement explicitly to avoid JSX syntax in .ts file
     const stream = await renderToStream(React.createElement(BoletoTemplate, { boleto: boleto }))
     

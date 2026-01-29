@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
-import { createBoleto } from "@/actions/boleto"
+import { createNuBankBoleto } from "@/actions/nubank"
 import { useRouter } from "next/navigation"
 import { Client } from "@prisma/client"
 import { BoletoPdf } from "./boleto-pdf"
@@ -53,10 +53,13 @@ export const BoletoForm = ({ clients }: BoletoFormProps) => {
 
   const onSubmit = (values: z.infer<typeof BoletoSchema>) => {
     startTransition(() => {
-      createBoleto(values)
+      createNuBankBoleto(values) // Switched to NuBank Action
         .then((data) => {
              if (data.success) {
                  router.push("/dashboard/boletos")
+             } else {
+                 // ideally handle error here (e.g. toast)
+                 alert("Failed: " + data.error)
              }
         })
     })

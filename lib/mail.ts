@@ -1,12 +1,32 @@
 export const sendEmail = async (to: string, subject: string, html: string) => {
-    // In a real app, use Nodemailer or Resend
-    console.log(`[MOCK EMAIL] To: ${to} | Subject: ${subject}`)
-    console.log(`[BODY]: ${html}`)
-    
-    // Simulate API delay
-    await new Promise(r => setTimeout(r, 500))
-    
-    return { success: true }
+    try {
+        const response = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
+            },
+            body: JSON.stringify({
+                from: 'SaaS Boletos <onboarding@resend.dev>', // Default testing domain
+                to: [to],
+                subject: subject,
+                html: html,
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error(`[EMAIL ERROR] API Response:`, data);
+            return { success: false, error: data };
+        }
+
+        console.log(`[EMAIL SENT] ID: ${data.id} | To: ${to}`);
+        return { success: true, data };
+    } catch (error) {
+        console.error(`[EMAIL ERROR] Failed to send email to ${to}:`, error);
+        return { success: false, error };
+    }
 }
 
 export const sendWhatsApp = async (phone: string, message: string) => {

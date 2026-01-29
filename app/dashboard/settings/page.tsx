@@ -4,6 +4,7 @@ import { SettingsForm } from "@/components/settings/settings-form"
 import { ProfileForm } from "@/components/settings/profile-form"
 import { PasswordForm } from "@/components/settings/password-form"
 import { AccountForm } from "@/components/settings/account-form"
+import { PaymentForm } from "@/components/settings/payment-form"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
@@ -32,6 +33,7 @@ const SettingsPage = async () => {
       <Tabs defaultValue="company" className="space-y-4">
           <TabsList>
             <TabsTrigger value="company">Platform Branding</TabsTrigger>
+            <TabsTrigger value="payments">Payments</TabsTrigger>
             <TabsTrigger value="profile">My Profile</TabsTrigger>
             <TabsTrigger value="security">Security</TabsTrigger>
           </TabsList>
@@ -40,6 +42,13 @@ const SettingsPage = async () => {
                <div className="border p-6 rounded-md bg-card max-w-xl">
                   <h3 className="text-lg font-medium mb-4">Company Details & Branding</h3>
                   <SettingsForm initialData={settings} />
+               </div>
+          </TabsContent>
+
+          <TabsContent value="payments" className="space-y-4">
+               <div className="border p-6 rounded-md bg-card max-w-xl">
+                  <h3 className="text-lg font-medium mb-4">Payment Gateways</h3>
+                  <PaymentForm initialData={settings} />
                </div>
           </TabsContent>
 

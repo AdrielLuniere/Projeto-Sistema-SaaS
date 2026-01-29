@@ -20,9 +20,11 @@ model Tenant {
   logoUrl     String?
   brandColor  String?  @default("#000000")
   
-  // PagBank Config
-  pagbankToken String? @default("") // Encrypted in Prod
-  pagbankSandbox Boolean @default(true)
+  // NuBank (SpinPay) Config
+  nubankToken String? @default("") // X-Merchant-Token
+  nubankKey   String? @default("") // X-Merchant-Key
+  nubankAccessToken String? @default("") // Bearer Token (Authorization)
+  nubankSandbox Boolean @default(true)
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -77,9 +79,9 @@ model Boleto {
   digitableLine String?
   pdfUrl        String?
   
-  // PagBank Integration
-  chargeId      String?   // ID da Cobrança no PagBank
-  paymentLink   String?   // Link oficial do boleto
+  // NuBank Integration
+  chargeId      String?   // ID da Cobrança no NuBank
+  paymentLink   String?   // Link oficial do checkout
   
   tenantId      String
   tenant        Tenant    @relation(fields: [tenantId], references: [id])
